@@ -12,20 +12,45 @@ const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 // Input Your OpenAI API Key Here. 
 // You can sign up and get API Key from here 
 // https://platform.openai.com/account/api-keys
-let apiKey = '';
+let apiKey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 const messages = []; // store previous messages to remember whole conversation
+
+// Define the typeWriter function
+function typeWriter(text, element, delay = 100) {
+    let i = 0;
+    const intervalId = setInterval(() => {
+        if (i < text.length) {
+            if (text.charAt(i) === '|') {
+                element.innerHTML += '<br>';
+            } else {
+                element.innerHTML += text.charAt(i);
+            }
+            i++;
+        } else {
+            clearInterval(intervalId);
+        }
+    }, delay);
+}
 
 // Function to add a chat message to the container
 function addMessage(message, isUser) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
     messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
-    messageDiv.textContent = message;
+    
+    // Convert newline characters to <br> tags
+    //    message = message.replace(/\n/g, '<br>');
+    message = message.replace(/\n/g, '|');
+    //messageDiv.innerHTML = message; // Use innerHTML instead of textContent
     messageContainer.appendChild(messageDiv);
 
+    // Call the typeWriter function to display the message
+    typeWriter(message, messageDiv, 50);
+    
     // Scroll to the bottom of the chat container
     messageContainer.scrollTop = messageContainer.scrollHeight;
-}
+   }
+   
 
 
 // Function to handle user input
